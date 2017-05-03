@@ -21,6 +21,14 @@ def show_img(ourScreen, img_name, x_Position,y_Position) :
     myimg = pygame.image.load(img_name)
     ourScreen.blit(myimg, (x_Position, y_Position))
 
+
+def show_text(text):
+    text_Font = pygame.font.Font("freesansbold.ttf", 20)
+    textSurface = text_Font.render(text, True, (0, 100, 0))
+    return textSurface
+
+#------------------------------------
+
 finish = False
 Page = 1
 
@@ -33,7 +41,7 @@ while not finish:
 
     pressd = pygame.key.get_pressed()  # 키 이벤트
 
-
+    gametime = int(pygame.time.get_ticks())
 
     if Page == 1:
         game_screen.fill((200, 200, 0))  # 배경색 갱신해줘야한다
@@ -51,17 +59,22 @@ while not finish:
         if pressd[pygame.K_RIGHT]:  x += 5
         if pressd[pygame.K_LEFT]:   x -= 5
 
-        #pygame.draw.rect(game_screen, (255,20,20), pygame.Rect(x, y, 10, 10))  # 방향키 처리
         show_img(game_screen, "picture/coin.png", x, y)
+
+
 
         #임시로 준것
         if pressd[pygame.K_DOWN]:   Page = 3
 
 
+        # 텍스트 출력용
+        textSurf = show_text("Gametime : " + str(gametime))
+        game_screen.blit(textSurf, (100, 100))
+
+
 
     elif Page == 3:
         game_screen.fill((200, 200, 200))  # 배경색 갱신해줘야한다
-
 
 
 
