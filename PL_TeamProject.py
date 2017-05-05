@@ -68,10 +68,20 @@ while not finish:
     elif Page == 2: #게임 시작화면
         game_screen.fill((0, 200, 0))  #배경색
 
-        if pressd[pygame.K_RIGHT]:  x += 5
-        if pressd[pygame.K_LEFT]:   x -= 5
+        if pressd[pygame.K_RIGHT]:
+            if x < widthSize-30:
+                x += 5
+        if pressd[pygame.K_LEFT]:
+            if x > 0:
+                x -= 5
+        if pressd[pygame.K_UP]:
+            if y > 0:
+                y -= 5
+        if pressd[pygame.K_DOWN]:
+            if y < heightSize-30:
+                y += 5
         # 임시로 준것
-        if pressd[pygame.K_DOWN]:   Page = 3
+        if pressd[pygame.K_p]:   Page = 3
 
 
         show_img(game_screen, "picture/coin.png", x, y)
