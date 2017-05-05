@@ -1,17 +1,19 @@
 #-*- coding:utf-8 -*-
-import pygame, sys
+import pygame, random
 
 pygame.init()
+
+imagesize = 30
 
 class Missile:
     def __init__(self, screen, cx, cy, tx, ty):
         self.screen = screen
-        self.x = cx + 25
-        self.y = cy + 25
+        self.x = cx + 10
+        self.y = cy + 10
         self.vx = tx - cx
         self.vy = ty - cy
         self.check = False
-        self.mImage = pygame.image.load("picture/coin.png")
+        self.mImage = pygame.image.load("picture/missile.png")
         self.mImage = pygame.transform.scale(self.mImage, (int(10), int(10)))
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
@@ -29,6 +31,38 @@ class Missile:
         mRect = self.mImage.get_rect()
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
+
+class Enemy:
+    def __init__(self, screen, ex, ey, tx, ty):
+        self.screen = screen
+        self.x = ex
+        self.y = ey
+        self.vx = tx - ex
+        self.vy = ty - ey
+        self.mImage = pygame.image.load("picture/enemy1.png")
+        self.mImage = pygame.transform.scale(self.mImage, (int(30), int(30)))
+        self.mVector = pygame.math.Vector2(self.vx, self.vy)
+        self.mVector = pygame.math.Vector2.normalize(self.mVector)
+
+    def update(self):
+
+        global widthSize, heightSize , imagesize
+        self.x += self.mVector[0]
+        self.y += self.mVector[1]
+        if self.y < 0 or self.y > heightSize-imagesize:
+            self.mVector = pygame.math.Vector2(self.vx,-self.vy)
+            self.mVector = pygame.math.Vector2.normalize(self.mVector)
+        if self.x < 0 or self.x > widthSize - imagesize:
+            self.mVector = pygame.math.Vector2(-self.vx, self.vy)
+            self.mVector = pygame.math.Vector2.normalize(self.mVector)
+
+
+    def draw(self):  #나중에 부모클래스 하나 만들어서 상속받아도 될듯
+        mRect = self.mImage.get_rect()
+        mRect = mRect.fit((self.x, self.y, 50, 50))
+        self.screen.blit(self.mImage, mRect)
+
+
 
 #----------------------------------## 게임 기본 설정 관련 ##---------------------------------------
 
@@ -71,6 +105,9 @@ finish = False
 Page = 1
 
 missileList = []
+enemyList = []
+
+makeEnemy = False
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 while not finish:
     for event in pygame.event.get():
@@ -96,34 +133,23 @@ while not finish:
         game_screen.fill((0, 200, 0))  #배경색
 
         if pressd[pygame.K_RIGHT]:
-            if x < widthSize-30:
-                x += 5
-        if pressd[pygame.K_LEFT]:
-            if x > 0:
-                x -= 5
-        if pressd[pygame.K_UP]:
-            if y > 0:
-                y -= 5
-        if pressd[pygame.K_DOWN]:
-            if y < heightSize-30:
-                y += 5
-<<<<<<< HEAD
+            if x < widthSize-imagesize:     x += 5
+        elif pressd[pygame.K_LEFT]:
+            if x > 0:                       x -= 5
+        elif pressd[pygame.K_UP]:
+            if y > 0:                       y -= 5
+        elif pressd[pygame.K_DOWN]:
+            if y < heightSize-imagesize:    y += 5
 
-
-
-
-=======
->>>>>>> 0e84f5bb365f5e7a00241ec0f6c110c6cf5f404e
         # 임시로 준것
         if pressd[pygame.K_p]:   Page = 3
 
 
-        show_img(game_screen, "picture/air.png", x, y)
+        show_img(game_screen, "picture/airplane.png", x, y)
 
 
-        pos = pygame.mouse.get_pos()
         if pressd[pygame.K_SPACE]:
-            missile = Missile(game_screen, x, y, pos[0], pos[1])
+            missile = Missile(game_screen, x, y, x, y-1)
             missileList.append(missile)
 
         for m in missileList:
@@ -132,19 +158,31 @@ while not finish:
             if m.check == True:
                 missileList.remove(m)
 
+        if makeEnemy == False:
+            for i in range(10):
+                random_x = random.randrange(0, widthSize-imagesize)
+                random_y = random.randrange(0, heightSize - imagesize)
+                enemy = Enemy(game_screen,random_x, random_y, x, y)  #200,200 은 방향을 지정하는거니깐 내쪽으로 움직이게 해야겠다
+                enemyList.append(enemy)
+
+            makeEnemy = True
+
+        for m in enemyList:
+            m.update()
+            m.draw()
+
+
+
 
         # 텍스트 출력용
         show_text(game_screen, "Gametime : " + str(gametime), 10, 10)
+
+
 
 
     elif Page == 3: #엔딩 화면
         game_screen.fill((200, 200, 200))  # 배경색
         show_text(game_screen, "GameOver", 100, 100)
 
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> 0e84f5bb365f5e7a00241ec0f6c110c6cf5f404e
     pygame.display.flip() #프레임 갱신
