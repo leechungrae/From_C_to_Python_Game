@@ -1,7 +1,34 @@
 #-*- coding:utf-8 -*-
-import pygame
+import pygame, sys
 
 pygame.init()
+
+class Missile:
+    def __init__(self, screen, cx, cy, tx, ty):
+        self.screen = screen
+        self.x = cx + 25
+        self.y = cy + 25
+        self.vx = tx - cx
+        self.vy = ty - cy
+        self.check = False
+        self.mImage = pygame.image.load("picture/coin.png")
+        self.mImage = pygame.transform.scale(self.mImage, (int(10), int(10)))
+        self.mVector = pygame.math.Vector2(self.vx, self.vy)
+        self.mVector = pygame.math.Vector2.normalize(self.mVector)
+
+    def update(self):
+        global widthSize, heightSize
+        self.x += self.mVector[0]
+        self.y += self.mVector[1]
+        if self.x < 0 or self.y < 0:
+            self.check = True
+        if self.x > widthSize or self.y > heightSize:
+            self.check = True
+
+    def draw(self):
+        mRect = self.mImage.get_rect()
+        mRect = mRect.fit((self.x, self.y, 50, 50))
+        self.screen.blit(self.mImage, mRect)
 
 #----------------------------------## 게임 기본 설정 관련 ##---------------------------------------
 
@@ -43,7 +70,7 @@ y = heightSize/2
 finish = False
 Page = 1
 
-
+missileList = []
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 while not finish:
     for event in pygame.event.get():
@@ -80,19 +107,38 @@ while not finish:
         if pressd[pygame.K_DOWN]:
             if y < heightSize-30:
                 y += 5
+
+
+
+
         # 임시로 준것
         if pressd[pygame.K_p]:   Page = 3
 
 
-        show_img(game_screen, "picture/coin.png", x, y)
+        show_img(game_screen, "picture/air.png", x, y)
+
+
+        pos = pygame.mouse.get_pos()
+        if pressd[pygame.K_SPACE]:
+            missile = Missile(game_screen, x, y, pos[0], pos[1])
+            missileList.append(missile)
+
+        for m in missileList:
+            m.update()
+            m.draw()
+            if m.check == True:
+                missileList.remove(m)
 
 
         # 텍스트 출력용
-        show_text(game_screen, "Gametime : " + str(gametime), 100, 100)
+        show_text(game_screen, "Gametime : " + str(gametime), 10, 10)
 
 
     elif Page == 3: #엔딩 화면
         game_screen.fill((200, 200, 200))  # 배경색
         show_text(game_screen, "GameOver", 100, 100)
+
+
+
 
     pygame.display.flip() #프레임 갱신
