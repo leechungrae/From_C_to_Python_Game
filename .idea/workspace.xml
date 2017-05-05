@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2fb2751-c9f2-49ff-873f-400c6096030a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/picture/enemy1.png" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/picture/air.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PL_TeamProject.py" afterPath="$PROJECT_DIR$/PL_TeamProject.py" />
-    </list>
+    <list default="true" id="a2fb2751-c9f2-49ff-873f-400c6096030a" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,11 +15,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PL_TeamProject.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PL_TeamProject.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PL_TeamProject.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2085">
-              <caret line="148" column="0" lean-forward="true" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
+            <state relative-caret-position="255">
+              <caret line="26" column="53" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="187" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="123.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../test/123.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2805">
+              <caret line="187" column="33" lean-forward="false" selection-start-line="187" selection-start-column="33" selection-end-line="187" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -47,6 +52,7 @@
       <list>
         <option value="$PROJECT_DIR$/ㅇㅇ.py" />
         <option value="$PROJECT_DIR$/PL_TeamProject.py" />
+        <option value="$PROJECT_DIR$/../test/123.py" />
       </list>
     </option>
   </component>
@@ -582,8 +588,16 @@
     <entry file="file://$PROJECT_DIR$/ㅇㅇ.py" />
     <entry file="file://$PROJECT_DIR$/PL_TeamProject.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2085">
-          <caret line="148" column="0" lean-forward="true" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
+        <state relative-caret-position="255">
+          <caret line="26" column="53" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="187" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../test/123.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2805">
+          <caret line="187" column="33" lean-forward="false" selection-start-line="187" selection-start-column="33" selection-end-line="187" selection-end-column="33" />
           <folding />
         </state>
       </provider>
