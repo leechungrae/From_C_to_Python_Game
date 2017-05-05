@@ -107,10 +107,13 @@ while not finish:
         if pressd[pygame.K_DOWN]:
             if y < heightSize-30:
                 y += 5
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 0e84f5bb365f5e7a00241ec0f6c110c6cf5f404e
         # 임시로 준것
         if pressd[pygame.K_p]:   Page = 3
 
@@ -138,7 +141,10 @@ while not finish:
         game_screen.fill((200, 200, 200))  # 배경색
         show_text(game_screen, "GameOver", 100, 100)
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 0e84f5bb365f5e7a00241ec0f6c110c6cf5f404e
     pygame.display.flip() #프레임 갱신
