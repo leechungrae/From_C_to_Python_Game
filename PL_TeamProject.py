@@ -11,8 +11,7 @@ widthSize= 500
 heightSize = 400
 imageSize = 30
 
-Enemycount = 15 #적군 숫자
-
+Enemycount = 9 #적군 숫자
 
 #게임 스크린 사이즈와 게임 제목 설정
 game_screen = pygame.display.set_mode((widthSize,heightSize))
@@ -22,35 +21,7 @@ pygame.display.set_caption("test")
 pygame.mixer.music.load('sound/ponyo.wav')
 pygame.mixer.music.play(0)
 
-#----------------------------------## 클래스 정의 ##---------------------------------------
-
-class Missile:
-    def __init__(self, screen, cx, cy, tx, ty):
-        self.screen = screen
-        self.x = cx + 10
-        self.y = cy + 10
-        self.vx = tx - cx
-        self.vy = ty - cy
-        self.check = False
-        self.mImage = pygame.image.load("picture/missile.png")
-        self.mImage = pygame.transform.scale(self.mImage, (int(10), int(10)))
-        self.mVector = pygame.math.Vector2(self.vx, self.vy)
-        self.mVector = pygame.math.Vector2.normalize(self.mVector)
-
-    def update(self):
-        self.x += self.mVector[0]
-        self.y += self.mVector[1]
-        if self.x < 0 or self.y < 0:
-            self.check = True
-        if self.x > widthSize or self.y > heightSize:
-            self.check = True
-
-    def draw(self):
-        self.update(self)
-        mRect = self.mImage.get_rect()
-        mRect = mRect.fit((self.x, self.y, 50, 50))
-        self.screen.blit(self.mImage, mRect)
-
+#----------------------------------## 클래스 정 ##---------------------------------------
 class Enemy:
     def __init__(self, screen, ex, ey, tx, ty):
         self.screen = screen
@@ -76,36 +47,31 @@ class Enemy:
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
 
+    def crush(self, cx, cy):
+        if self.x+3 < cx + imageSize and self.x+3 > cx - imageSize:
+            if self.y+3 < cy + imageSize and self.y+3 > cy - imageSize:
+                self.check = True
+
     def draw(self):  #나중에 부모클래스 하나 만들어서 상속받아도 될듯
-        self.update(self)
+        self.update()
 
         mRect = self.mImage.get_rect()
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
 
-
-
-
 #-----------------------------------## 게임 사용 변수 ##---------------------------------------
-
 #키보드 이동용 전역변수 초기위치지정용도
 x = widthSize/2
 y = heightSize/2
-
 
 finish = False #나중에 게임루프를 벗어나고 싶을때 즉 종료하고 싶을때
 makeEnemy = False  #처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
 
 enemyList = []
-missileList = []
 Page = 1
-
 
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 while not finish:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            finish = True
 
     pressd = pygame.key.get_pressed()  # 키 이벤트
     gametime = int(pygame.time.get_ticks()) # 게임 타이머
@@ -116,11 +82,13 @@ while not finish:
         # 텍스트 출력용
         function.show_text(game_screen, "If you want to start game, Enter the Spacebar ", 20, 100)
 
-        # 임시로 준것
         if pressd[pygame.K_SPACE]:   Page = 2
 
     elif Page == 2: #게임 시작화면
         game_screen.fill((0, 200, 0))  #배경색
+
+        function.show_text(game_screen, "Gametime : " + str(gametime), 10, 10) # 텍스트 출력용
+        function.show_img(game_screen, "picture/airplane.png", x, y)
 
         if pressd[pygame.K_RIGHT]:
             if x < widthSize-imageSize:     x += 5
@@ -131,22 +99,6 @@ while not finish:
         elif pressd[pygame.K_DOWN]:
             if y < heightSize-imageSize:    y += 5
 
-        # 임시로 준것
-        if pressd[pygame.K_p]:   Page = 3
-
-
-        function.show_img(game_screen, "picture/airplane.png", x, y)
-
-
-        #---------------------------미사일 발사처리해주려고 ------
-        if pressd[pygame.K_SPACE]:
-            missile = Missile(game_screen, x, y, x, y-1)
-            missileList.append(missile)
-
-        for m in missileList:
-            m.draw()
-            if m.check == True:     missileList.remove(m)
-
         # ---------------------------적군 발사처리해주려고 ------
         if makeEnemy == False:
             for i in range(Enemycount):
@@ -156,20 +108,16 @@ while not finish:
                 enemyList.append(enemy)
             makeEnemy = True
 
-
         for m in enemyList:
             m.draw()
-            #나중에 true로 주고 처리하자자 새로운 유닛 넣자
 
-
-
-       # 텍스트 출력용
-        function.show_text(game_screen, "Gametime : " + str(gametime), 10, 10)
+        for m in enemyList:
+            m.crush(x,y)
+            if m.check == True: Page = 3
 
 
     elif Page == 3: #엔딩 화면
         game_screen.fill((200, 200, 200))  # 배경색
-        function.show_text(game_screen, "GameOver", 100, 100)
-
+        function.show_text(game_screen, "GameOver", widthSize/2, heightSize/2)
 
     pygame.display.flip() #프레임 갱신
