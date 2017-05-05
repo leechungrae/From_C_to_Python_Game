@@ -72,6 +72,9 @@ Page = 1
 
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 while not finish:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            finish = True
 
     pressd = pygame.key.get_pressed()  # 키 이벤트
     gametime = int(pygame.time.get_ticks()) # 게임 타이머
