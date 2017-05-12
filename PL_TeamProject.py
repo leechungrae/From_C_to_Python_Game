@@ -34,27 +34,27 @@ class Enemy:
         self.mImage = pygame.transform.scale(self.mImage, (30, 30))
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
-    
+
     def update(self):
         self.x += self.mVector[0]
         self.y += self.mVector[1]
-        
+
         if self.y < 0 or self.y > heightSize - imageSize:
             self.vy = -self.vy
         if self.x < 0 or self.x > widthSize - imageSize:
             self.vx = -self.vx
-        
+
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
-    
+
     def crush(self, cx, cy):
         if self.x+3 < cx + imageSize and self.x+3 > cx - imageSize:
             if self.y+3 < cy + imageSize and self.y+3 > cy - imageSize:
                 self.check = True
 
-def draw(self):  #나중에 부모클래스 하나 만들어서 상속받아도 될듯
-    self.update()
-        
+    def draw(self):  #나중에 부모클래스 하나 만들어서 상속받아도 될듯
+        self.update()
+
         mRect = self.mImage.get_rect()
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
@@ -71,7 +71,7 @@ class Missile:
         self.mImage = pygame.transform.scale(self.mImage, (10, 10))
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
-    
+
     def update(self):
         global widthSize, heightSize
         self.x += self.mVector[0]
@@ -81,11 +81,15 @@ class Missile:
         if self.x > widthSize or self.y > heightSize:
             self.check = True
 
-def draw(self):
-    self.update()
+    def draw(self):
+        self.update()
         mRect = self.mImage.get_rect()
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
+
+
+
+
 
 #-----------------------------------## 게임 사용 변수 ##---------------------------------------
 #키보드 이동용 전역변수 초기위치지정용도
@@ -107,38 +111,39 @@ while not finish:
         if event.type == pygame.QUIT:
             finish = True
 
-pressd = pygame.key.get_pressed()  # 키 이벤트
+    pressd = pygame.key.get_pressed()  # 키 이벤트
     gametime = int(pygame.time.get_ticks()) # 게임 타이머
-    
-    
-    
+
+    function.show_img(game_screen, "picture/bg.png", 0, 0)
+
+
     if Page == 1:  #초기화면
-        game_screen.fill((200, 200, 0))  # 배경색
-        
+        #game_screen.fill((200, 200, 0))  # 배경색
+
+
         # 텍스트 출력용
         function.show_text(game_screen, "If you want to start game, Enter the Spacebar ", 20, 100)
-        
         if pressd[pygame.K_SPACE]:   Page = 2
-    
+
     elif Page == 2: #게임 시작화면
-        game_screen.fill((0, 200, 0))  #배경색
-        
+        #game_screen.fill((0, 200, 0))  #배경색
+
         function.show_text(game_screen, "Gametime : " + str(gametime), 10, 10) # 텍스트 출력용
         function.show_img(game_screen, "picture/airplane.png", x, y)
-        
+
         (x, y) = function.character_Control(pressd , widthSize, heightSize, imageSize, x, y)
-        
-        
+
+
         #------미사일 처리
         if pressd[pygame.K_SPACE]:
             missile = Missile(game_screen, x, y, x, y-1)
             missileList.append(missile)
-        
+
         for m in missileList:
             m.draw()
             if m.check == True:
                 missileList.remove(m)
-    
+
         #------적군 처리---------------
         if makeEnemy == False:
             for i in range(Enemycount):
@@ -148,25 +153,26 @@ pressd = pygame.key.get_pressed()  # 키 이벤트
                 enemyList.append(enemy)
             makeEnemy = True
 
-for e in enemyList:
-    e.draw()
-        e.crush(x,y)
+        for e in enemyList:
+            e.draw()
+            e.crush(x,y)
             if e.check == True:     Page = 3
-        
+
         for e in enemyList:
             for m in missileList:   # 1준게 적군의 반지름 사이즈이다
                 if m.x < e.x + 1 and m.x > e.x-1 and m.y < e.y + 1 and m.y > e.y -1:
                     missileList.remove(m)
                     enemyList.remove(e)
 
-elif Page == 3: #엔딩 화면
-    game_screen.fill((200, 200, 200))  # 배경색
-        
+    elif Page == 3: #엔딩 화면
+        game_screen.fill((200, 200, 200))  # 배경색
+
         if gametimecheck == False:
             gameovertime = gametime
             gametimecheck = True
 
+        for i in range(1,5):
+            function.show_text(game_screen, "GameOver:  " + str(gameovertime) , widthSize/i, heightSize/i)
 
-    function.show_text(game_screen, "GameOver:  " + str(gameovertime) , widthSize/2, heightSize/2)
 
-pygame.display.flip() #프레임 갱신
+    pygame.display.flip() #프레임 갱신

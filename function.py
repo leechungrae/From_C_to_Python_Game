@@ -17,3 +17,6 @@ def character_Control(pressd, widthSize, heightSize, imageSize, x, y):
     if pressd[pygame.K_DOWN] and y < heightSize - imageSize:  y += 5
 
     return x, y
+
+
+
