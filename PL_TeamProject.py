@@ -22,7 +22,8 @@ pygame.mixer.music.load('sound/ponyo.wav')
 pygame.mixer.music.play(0)
 
 #----------------------------------## 클래스 정 ##---------------------------------------
-class Enemy:
+
+class MoveEntity:
     def __init__(self, screen, ex, ey, tx, ty):
         self.screen = screen
         self.x = ex
@@ -30,10 +31,26 @@ class Enemy:
         self.vx = tx - ex
         self.vy = ty - ey
         self.check = False
-        self.mImage = pygame.image.load("picture/enemy1.png")
-        self.mImage = pygame.transform.scale(self.mImage, (int(30), int(30)))
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
+
+    def draw(self):
+        self.update()
+        mRect = self.mImage.get_rect()
+        mRect = mRect.fit((self.x, self.y, 50, 50))
+        self.screen.blit(self.mImage, mRect)
+
+
+
+class Enemy(MoveEntity):  #상속
+    def __init__(self, screen, ex, ey, tx, ty):
+        MoveEntity.__init__(self, screen, ex, ey, tx, ty)
+        self.mImage = pygame.image.load("picture/enemy1.png")
+        self.mImage = pygame.transform.scale(self.mImage, (30, 30))
+
+    def draw(self):
+        MoveEntity.draw(self)
+
 
     def update(self):
         self.x += self.mVector[0]
@@ -52,25 +69,17 @@ class Enemy:
             if self.y+3 < cy + imageSize and self.y+3 > cy - imageSize:
                 self.check = True
 
-    def draw(self):  #나중에 부모클래스 하나 만들어서 상속받아도 될듯
-        self.update()
-
-        mRect = self.mImage.get_rect()
-        mRect = mRect.fit((self.x, self.y, 50, 50))
-        self.screen.blit(self.mImage, mRect)
 
 class Missile:
-    def __init__(self, screen, cx, cy, tx, ty):
-        self.screen = screen
-        self.x = cx + 10
-        self.y = cy + 10
-        self.vx = tx - cx
-        self.vy = ty - cy
-        self.check = False
+    def __init__(self, screen, ex, ey, tx, ty):
+        MoveEntity.__init__(self, screen, ex, ey, tx, ty)
         self.mImage = pygame.image.load("picture/coin.png")
         self.mImage = pygame.transform.scale(self.mImage, (10, 10))
-        self.mVector = pygame.math.Vector2(self.vx, self.vy)
-        self.mVector = pygame.math.Vector2.normalize(self.mVector)
+
+    def draw(self):
+        MoveEntity.draw(self)
+
+
 
     def update(self):
         global widthSize, heightSize
@@ -87,6 +96,11 @@ class Missile:
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
 
+
+
+
+
+
 #-----------------------------------## 게임 사용 변수 ##---------------------------------------
 #키보드 이동용 전역변수 초기위치지정용도
 x = widthSize/2
@@ -99,6 +113,8 @@ enemyList = []
 missileList = []
 Page = 1
 
+gametimecheck = False
+
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 while not finish:
     for event in pygame.event.get():
@@ -108,18 +124,19 @@ while not finish:
     pressd = pygame.key.get_pressed()  # 키 이벤트
     gametime = int(pygame.time.get_ticks()) # 게임 타이머
 
+    function.show_img(game_screen, "picture/bg.png", 0, 0)
 
 
     if Page == 1:  #초기화면
-        game_screen.fill((200, 200, 0))  # 배경색
+        #game_screen.fill((200, 200, 0))  # 배경색
+
 
         # 텍스트 출력용
         function.show_text(game_screen, "If you want to start game, Enter the Spacebar ", 20, 100)
-
         if pressd[pygame.K_SPACE]:   Page = 2
 
     elif Page == 2: #게임 시작화면
-        game_screen.fill((0, 200, 0))  #배경색
+        #game_screen.fill((0, 200, 0))  #배경색
 
         function.show_text(game_screen, "Gametime : " + str(gametime), 10, 10) # 텍스트 출력용
         function.show_img(game_screen, "picture/airplane.png", x, y)
@@ -159,6 +176,13 @@ while not finish:
 
     elif Page == 3: #엔딩 화면
         game_screen.fill((200, 200, 200))  # 배경색
-        function.show_text(game_screen, "GameOver", widthSize/2, heightSize/2)
+
+        if gametimecheck == False:
+            gameovertime = gametime
+            gametimecheck = True
+
+        for i in range(1,5):
+            function.show_text(game_screen, "GameOver:  " + str(gameovertime) , widthSize/i, heightSize/i)
+
 
     pygame.display.flip() #프레임 갱신
