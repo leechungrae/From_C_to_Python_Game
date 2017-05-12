@@ -33,13 +33,18 @@ class MoveEntity:
         self.check = False
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
-
+    
     def draw(self):
         self.update()
         mRect = self.mImage.get_rect()
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
 
+    def draw(self):
+        self.update()
+        mRect = self.mImage.get_rect()
+        mRect = mRect.fit((self.x, self.y, 50, 50))
+        self.screen.blit(self.mImage, mRect)
 
 
 class Enemy(MoveEntity):  #상속
@@ -55,15 +60,15 @@ class Enemy(MoveEntity):  #상속
     def update(self):
         self.x += self.mVector[0]
         self.y += self.mVector[1]
-
+        
         if self.y < 0 or self.y > heightSize - imageSize:
             self.vy = -self.vy
         if self.x < 0 or self.x > widthSize - imageSize:
             self.vx = -self.vx
-
+        
         self.mVector = pygame.math.Vector2(self.vx, self.vy)
         self.mVector = pygame.math.Vector2.normalize(self.mVector)
-
+    
     def crush(self, cx, cy):
         if self.x+3 < cx + imageSize and self.x+3 > cx - imageSize:
             if self.y+3 < cy + imageSize and self.y+3 > cy - imageSize:
@@ -76,9 +81,9 @@ class Missile:
         self.mImage = pygame.image.load("picture/coin.png")
         self.mImage = pygame.transform.scale(self.mImage, (10, 10))
 
+
     def draw(self):
         MoveEntity.draw(self)
-
 
 
     def update(self):
@@ -95,9 +100,6 @@ class Missile:
         mRect = self.mImage.get_rect()
         mRect = mRect.fit((self.x, self.y, 50, 50))
         self.screen.blit(self.mImage, mRect)
-
-
-
 
 
 
@@ -134,26 +136,26 @@ while not finish:
         # 텍스트 출력용
         function.show_text(game_screen, "If you want to start game, Enter the Spacebar ", 20, 100)
         if pressd[pygame.K_SPACE]:   Page = 2
-
+    
     elif Page == 2: #게임 시작화면
         #game_screen.fill((0, 200, 0))  #배경색
 
         function.show_text(game_screen, "Gametime : " + str(gametime), 10, 10) # 텍스트 출력용
         function.show_img(game_screen, "picture/airplane.png", x, y)
-
+        
         (x, y) = function.character_Control(pressd , widthSize, heightSize, imageSize, x, y)
-
-
+        
+        
         #------미사일 처리
         if pressd[pygame.K_SPACE]:
             missile = Missile(game_screen, x, y, x, y-1)
             missileList.append(missile)
-
+        
         for m in missileList:
             m.draw()
             if m.check == True:
                 missileList.remove(m)
-
+    
         #------적군 처리---------------
         if makeEnemy == False:
             for i in range(Enemycount):
@@ -168,16 +170,15 @@ while not finish:
             e.crush(x,y)
             if e.check == True:     Page = 3
 
-        for e in enemyList:
-            for m in missileList:   # 1준게 적군의 반지름 사이즈이다
-                if m.x < e.x + 1 and m.x > e.x-1 and m.y < e.y + 1 and m.y > e.y -1:
-                    missileList.remove(m)
-                    enemyList.remove(e)
+            for e in enemyList:
+                for m in missileList:   # 1준게 적군의 반지름 사이즈이다
+                    if m.x < e.x + 1 and m.x > e.x-1 and m.y < e.y + 1 and m.y > e.y -1:
+                        missileList.remove(m)
+                        enemyList.remove(e)
+
 
     elif Page == 3: #엔딩 화면
         game_screen.fill((200, 200, 200))  # 배경색
-
-
 
         if gametimecheck == False:
             gameovertime = gametime
