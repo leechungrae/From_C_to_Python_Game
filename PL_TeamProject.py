@@ -177,6 +177,8 @@ while not finish:
     elif Page == 3: #엔딩 화면
         game_screen.fill((200, 200, 200))  # 배경색
 
+
+
         if gametimecheck == False:
             gameovertime = gametime
             gametimecheck = True
@@ -184,5 +186,6 @@ while not finish:
         for i in range(1,5):
             function.show_text(game_screen, "GameOver:  " + str(gameovertime) , widthSize/i, heightSize/i)
 
+        if pressd[pygame.K_p]:      Page = 1
 
     pygame.display.flip() #프레임 갱신
