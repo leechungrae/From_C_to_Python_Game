@@ -63,8 +63,8 @@ class Enemy(MoveEntity):  # 상속
 class Missile:
     def __init__(self, screen, ex, ey, tx, ty):
         MoveEntity.__init__(self, screen, ex, ey, tx, ty)
-        self.mImage = pygame.image.load("picture/coin.png")
-        self.mImage = pygame.transform.scale(self.mImage, (10, 10))
+        self.mImage = pygame.image.load("picture/bullet.png")
+        self.mImage = pygame.transform.scale(self.mImage, (20, 35))
 
     def draw(self):
         self.update()
@@ -73,7 +73,7 @@ class Missile:
     def update(self):
         global widthSize, heightSize
         self.x += self.mVector[0]
-        self.y += self.mVector[1]
+        self.y += self.mVector[1] - 5   # 총알 속도
         if self.x < 0 or self.y < 0:                        self.check = True
         if self.x > widthSize or self.y > heightSize:       self.check = True
 
@@ -154,7 +154,7 @@ while not finish:
 
         # ------미사일 처리
         if pressed[pygame.K_SPACE]:
-            missile = Missile(game_screen, airplane_pos_x, airplane_pos_y, airplane_pos_x, airplane_pos_y - 1)
+            missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
             missileList.append(missile)
         for m in missileList:
             m.draw()
@@ -164,7 +164,7 @@ while not finish:
         # -------적과 미사일 맞을 때 처리
         for e in enemyList:
             for m in missileList:  # 1준게 적군의 반지름 사이즈이다
-                if m.x < e.x + 1 and m.x > e.x - 1 and m.y < e.y + 1 and m.y > e.y - 1:
+                if m.x < e.x + 15 and m.x > e.x - 15 and m.y < e.y + 2 and m.y > e.y - 2:
                     missileList.remove(m)
                     enemyList.remove(e)
 
