@@ -55,8 +55,8 @@ class Enemy(MoveEntity):  # 상속
         # ------------------------------------------------------------
 
     def crush(self, mx, my):
-        if self.x + 3 < mx + enemySize and self.x + 3 > mx - enemySize:
-            if self.y + 3 < my + enemySize and self.y + 3 > my - enemySize:
+        if self.x + 15  < mx + enemySize and self.x - 15 > mx - enemySize:
+            if self.y + 15  < my + enemySize and self.y - 15 > my - enemySize:
                 self.check = True
 
 
