@@ -64,7 +64,7 @@ class Missile:
     def __init__(self, screen, ex, ey, tx, ty):
         MoveEntity.__init__(self, screen, ex, ey, tx, ty)
         self.mImage = pygame.image.load("picture/bullet.png")
-        self.mImage = pygame.transform.scale(self.mImage, (20, 35))
+        self.mImage = pygame.transform.scale(self.mImage, (23, 35))
 
     def draw(self):
         self.update()
@@ -155,6 +155,16 @@ while not finish:
         # ------미사일 처리
         if pressed[pygame.K_SPACE]:
             missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
+
+            '''try:
+                last_element = missile.spare_list[-1]
+                difference = abs(missile.y - last_element.y)
+
+                if difference < missile.height + 50:
+                    continue
+            except Exception:
+                pass
+            '''
             missileList.append(missile)
         for m in missileList:
             m.draw()
