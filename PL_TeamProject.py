@@ -97,15 +97,16 @@ pygame.mixer.music.play(0)
 #----------------------------           # 게임 사용 변수    -----------------------------------
 
 
-gameTimeCheck = False                   # 종료시 게임시간 체크
-makeEnemy = False                       # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
+gameOverTimeCheck = False                   # 종료시 게임시간 체크
+makeEnemy = False   # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
+gameStartTimeCheck = False
 enemyList = []                          # 적군 리스트
 missileList = []                        # 미사일 리스트
 page = 1                                # 페이지 처리
 enemyCount = 7                          # 적군 숫자
 airplane_pos_x = widthSize / 2          # 내 캐릭터 초기 위치값
 airplane_pos_y = heightSize / 2         # 내 캐릭터 초기 위치값
-
+missileCheck = True
 
 
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
@@ -116,20 +117,23 @@ while not finish:
             finish = True
 
     pressed = pygame.key.get_pressed()           # 키 이벤트
-    gametime = int(pygame.time.get_ticks())     # 게임 타이머
+    gameTotalTime = int(pygame.time.get_ticks()/1000)     # 게임 타이머
 
     if page == 1:
         function.show_img(game_screen, "picture/bg1.png", 0, 0)  # 배경 설정
-
-        function.show_text(game_screen, "If you want to start game, Enter the Spacebar ", 20, 100)
 
         if pressed[pygame.K_SPACE]:      page = 2
 
 
     elif page == 2:
+        if gameStartTimeCheck ==False:
+            gameStartTime = gameTotalTime
+            gameStartTimeCheck = True
+
+        gameTime = gameTotalTime - gameStartTime
         function.show_img(game_screen, "picture/bg2.png", 0, 0)  # 배경 설정
 
-        function.show_text(game_screen, "Gametime : " + str(gametime), 10, 10)  # 텍스트 출력용
+        function.show_text(game_screen, "Gametime : " + str(gameTime), 10, 10)  # 텍스트 출력용
 
 
 
@@ -153,19 +157,18 @@ while not finish:
 
 
         # ------미사일 처리
-        if pressed[pygame.K_SPACE]:
-            missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
+        if missileCheck == True:
+            if pressed[pygame.K_SPACE]:
+                missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
+                missileList.append(missile)
 
-            '''try:
-                last_element = missile.spare_list[-1]
-                difference = abs(missile.y - last_element.y)
+                missileCheck = False
+                missileShotTime = gameTotalTime
+        else:
+            if gameTotalTime - missileShotTime > 1:
+                missileCheck = True
 
-                if difference < missile.height + 50:
-                    continue
-            except Exception:
-                pass
-            '''
-            missileList.append(missile)
+
         for m in missileList:
             m.draw()
             if m.check == True:
@@ -182,15 +185,16 @@ while not finish:
     elif page == 3:  # 엔딩 화면
         function.show_img(game_screen, "picture/bg3.png", 0, 0)  # 배경 설정
 
-        if gameTimeCheck == False:
-            gameovertime = gametime
-            gameTimeCheck = True
+        if gameOverTimeCheck == False:
+            gameOverTime = gameTime
+            gameOverTimeCheck = True
 
-        function.show_text(game_screen, "GameOver:  " + str(gameovertime), widthSize / i, heightSize / i)
+        function.show_text(game_screen, "GameOver:  " + str(gameOverTime), widthSize / 2, heightSize / 2)
 
         if pressed[pygame.K_s]:
             gameTimeCheck = False  # 종료시 게임시간 체크
             makeEnemy = False  # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
+            gameStartTimeCheck = False
             enemyList = []  # 적군 리스트
             missileList = []  # 미사일 리스트
             page = 1  # 페이지 처리
