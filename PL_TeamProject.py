@@ -41,6 +41,7 @@ class Enemy(MoveEntity):  # 상속
     def crush(self, mx, my):
         if self.x + 15 < mx + enemySize and self.x - 15 > mx - enemySize:
             if self.y + 15 < my + enemySize and self.y - 15 > my - enemySize:
+                collision_sound.play()
                 self.check = True
 
 class Missile:
@@ -81,6 +82,10 @@ pygame.mixer.music.play(0)
 # 미사일 효과음
 bullet_sound = pygame.mixer.Sound("audio/bullet.wav")
 bullet_sound.set_volume(0.6)
+
+# 명중 시 폭발음
+collision_sound = pygame.mixer.Sound("audio/explosion.wav")
+collision_sound.set_volume(0.5)
 
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 finish = False
@@ -154,7 +159,7 @@ while not finish:
                 missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
                 missileList.append(missile)
                 missileCheck = False
-                missileShotTime = gameTotalTime
+                missileShotTime = gameTotalTime - 1
         else:
             if gameTotalTime - missileShotTime > 1:
                 missileCheck = True
@@ -169,7 +174,9 @@ while not finish:
         # -------적과 미사일 맞을 때 처리
         for e in enemyList:
             for m in missileList:  # 1준게 적군의 반지름 사이즈이다
-                if m.x < e.x + 15 and m.x > e.x - 15 and m.y < e.y + 2 and m.y > e.y - 2:
+                #if pygame.sprite.spritecollide(e, m ,True):
+                if m.x < e.x + 23 and m.x > e.x - 23 and m.y < e.y + 1 and m.y > e.y - 5:
+                    collision_sound.play()
                     missileList.remove(m)
                     enemyList.remove(e)
 
