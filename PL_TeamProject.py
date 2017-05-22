@@ -78,6 +78,10 @@ pygame.display.set_caption("PL_Project")
 pygame.mixer.music.load('sound/ponyo.wav')
 pygame.mixer.music.play(0)
 
+# 미사일 효과음
+bullet_sound = pygame.mixer.Sound("audio/bullet.wav")
+bullet_sound.set_volume(0.6)
+
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 finish = False
 while not finish:
@@ -146,6 +150,7 @@ while not finish:
         # ------미사일 처리
         if missileCheck == True:
             if pressed[pygame.K_SPACE]:
+                bullet_sound.play()
                 missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
                 missileList.append(missile)
                 missileCheck = False
