@@ -30,6 +30,6 @@ def enemyRandomPosition(w, h, s):
 
 def show_result(game_screen,widthSize,heightSize,gameResult):
     for i in range(len(gameResult)):
-        show_text(game_screen, "GameOver:  " + str(gameResult[i]), widthSize / 3, heightSize / 3 + (50 * i))
+        show_text(game_screen, "Score:  " + str(gameResult[i]), widthSize / 3 + 30, heightSize / 3 + (50 * i))
 
 

@@ -76,8 +76,8 @@ game_screen = pygame.display.set_mode((widthSize, heightSize))
 pygame.display.set_caption("PL_Project")
 
 # 오디오 출력용
-pygame.mixer.music.load('sound/ponyo.wav')
-pygame.mixer.music.play(0)
+pygame.mixer.music.load('sound/bgm.wav')
+pygame.mixer.music.play(-1) # -1 설정해서 무한 반복
 
 # 미사일 효과음
 bullet_sound = pygame.mixer.Sound("audio/bullet.wav")
@@ -85,7 +85,7 @@ bullet_sound.set_volume(0.6)
 
 # 명중 시 폭발음
 collision_sound = pygame.mixer.Sound("audio/explosion.wav")
-collision_sound.set_volume(0.5)
+collision_sound.set_volume(0.8)
 
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
 finish = False
@@ -104,8 +104,11 @@ while not finish:
         airplane_pos_x = widthSize / 2      # 내 캐릭터 초기 위치값
         airplane_pos_y = heightSize / 2     # 내 캐릭터 초기 위치값
         missileCheck = True                 # 미사일 계속 발생안되게 만드는 것
-
         gameInitCheck = True                # 게임 초기화 설정용도
+        missile_width = 4                   # 미사일 너비
+        missile_height = 1                  # 미사일 높이
+        enemy_width = 23                    # 적 개체 너비
+        enemy_height = 5                    # 적 개체 높이
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -164,7 +167,7 @@ while not finish:
         if missileCheck == True:
             if pressed[pygame.K_SPACE]:
                 bullet_sound.play()
-                missile = Missile(game_screen, airplane_pos_x-4, airplane_pos_y, airplane_pos_x-4, airplane_pos_y - 1)
+                missile = Missile(game_screen, airplane_pos_x-missile_width, airplane_pos_y, airplane_pos_x-missile_width, airplane_pos_y - missile_height)
                 missileList.append(missile)
                 missileCheck = False
                 missileShotTime = gameTotalTime - 1
@@ -183,7 +186,7 @@ while not finish:
         for e in enemyList:
             for m in missileList:  # 1준게 적군의 반지름 사이즈이다
                 #if pygame.sprite.spritecollide(e, m ,True):
-                if m.x < e.x + 23 and m.x > e.x - 23 and m.y < e.y + 1 and m.y > e.y - 5:
+                if m.x < e.x + enemy_width and m.x > e.x - enemy_width and m.y < e.y + 1 and m.y > e.y - enemy_height:
                     collision_sound.play()
                     missileList.remove(m)
                     enemyList.remove(e)
