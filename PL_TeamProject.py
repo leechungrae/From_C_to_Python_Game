@@ -17,10 +17,10 @@ class MoveEntity:
         self.screen.blit(self.mImage, mRect)
 
 class Enemy(MoveEntity):  # 상속
-    def __init__(self, screen, ex, ey, tx, ty, gt):
+    def __init__(self, screen, ex, ey, tx, ty, gt, picture):
         MoveEntity.__init__(self, screen, ex, ey, tx, ty)
         self.gameTime = gt
-        self.mImage = pygame.image.load("picture/enemy1.png")
+        self.mImage = pygame.image.load(picture)
         self.mImage = pygame.transform.scale(self.mImage, (30, 30))
 
     def draw(self):
@@ -93,7 +93,8 @@ while not finish:
     if gameInitCheck == False: #게임 초기화 체크용
 
         gameOverTimeCheck = False           # 종료시 게임시간 체크
-        makeEnemyCheck = False                   # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
+        makeEnemyCheck = False              # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
+        enemyStage = 1
         gameStartTimeCheck = False          # 게임 시작 저장용
         enemyList = []                      # 적군 리스트
         missileList = []                    # 미사일 리스트
@@ -111,7 +112,7 @@ while not finish:
             finish = True
 
     pressed = pygame.key.get_pressed()                      # 키 이벤트
-    gameTotalTime = int(pygame.time.get_ticks()/1000)       # 게임 타이머
+    gameTotalTime = round((pygame.time.get_ticks()/1000),1)     # 게임 타이머
 
     if page == 1:
         function.show_img(game_screen, "picture/bg1.png", 0, 0)  # 배경 설정
@@ -122,7 +123,7 @@ while not finish:
             gameStartTime = gameTotalTime
             gameStartTimeCheck = True
 
-        gameTime = gameTotalTime - gameStartTime
+        gameTime = round(gameTotalTime - gameStartTime, 2)
 
         #게임 최대 스피드 정리하기
         gameSpeed = gameTime
@@ -137,14 +138,21 @@ while not finish:
 
         # ----- 적 캐릭터 생성 --------
         if makeEnemyCheck == False:
+            if enemyStage == 1:                  picture = "picture/enemy1.png"
+            elif enemyStage == 2:                picture = "picture/enemy2.png"
+            else:                                picture = "picture/enemy3.png"
+
             for i in range(enemyCount):
                 (random_x, random_y) = function.enemyRandomPosition(widthSize, heightSize, enemySize)
-                enemy = Enemy(game_screen, random_x, random_y, airplane_pos_x, airplane_pos_y, gameTime)
+                enemy = Enemy(game_screen, random_x, random_y, airplane_pos_x, airplane_pos_y, gameTime, picture)
                 enemyList.append(enemy)
+
             makeEnemyCheck = True
 
         if len(enemyList) < 5:
             makeEnemyCheck = False
+            enemyStage +=1
+
 
 
         for e in enemyList:
@@ -191,11 +199,8 @@ while not finish:
             gameOverTimeCheck = True
             gameResult.append(gameOverTime)
 
-
         function.show_result(game_screen, widthSize, heightSize, gameResult)
 
         if pressed[pygame.K_s]:            gameInitCheck = False
-
-
 
     pygame.display.flip()  # 프레임 갱신
