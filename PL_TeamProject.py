@@ -118,7 +118,7 @@ while not finish:
     gameTotalTime = round((pygame.time.get_ticks()/1000),1)     # 게임 타이머
 
     if page == 1:
-        function.show_img(game_screen, "picture/bg1.png", 0, 0)  # 배경 설정
+        function.show_img(game_screen, "picture/bg.jpg", 0, 0)  # 배경 설정
         if pressed[pygame.K_SPACE]:         page = 2
 
     elif page == 2:
