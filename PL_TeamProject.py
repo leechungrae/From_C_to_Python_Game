@@ -39,8 +39,8 @@ class Enemy(MoveEntity):  # 상속
         self.y += (self.mVector[1] * gameSpeed)
 
     def crush(self, mx, my):
-        if self.x + 15 < mx + mySize and self.x - 15 > mx - mySize:
-            if self.y + 15 < my + mySize and self.y - 15 > my - mySize:
+        if self.x + enemy_width < mx + mySize and self.x - enemy_width > mx - mySize:
+            if self.y + enemy_height < my + mySize and self.y - enemy_height > my - mySize:
                 collision_sound.play()
                 self.check = True
 
@@ -48,7 +48,7 @@ class Missile(MoveEntity):
     def __init__(self, screen, ex, ey, tx, ty):
         MoveEntity.__init__(self, screen, ex, ey, tx, ty)
         self.mImage = pygame.image.load("picture/bullet.png")
-        self.mImage = pygame.transform.scale(self.mImage, (23, 35))
+        self.mImage = pygame.transform.scale(self.mImage, (missile_width, missile_height))
 
     def draw(self):
         self.update()
@@ -57,7 +57,7 @@ class Missile(MoveEntity):
     def update(self):
         global widthSize, heightSize
         self.x += self.mVector[0]
-        self.y += self.mVector[1] - 5   # 총알 속도
+        self.y += self.mVector[1] - missileSpeed
         if self.x < 0 or self.y < 0:                        self.check = True
         if self.x > widthSize or self.y > heightSize:       self.check = True
 
@@ -65,12 +65,14 @@ class Missile(MoveEntity):
 pygame.init()
 
 widthSize, heightSize = 500, 400
-missile_width, missile_height = 4, 1                                # 미사일 너비, 높이
+errorRange_x, errorRange_y = 4, 1                                   # 충돌시 미사일 오차범위
+missile_width, missile_height = 23, 35                              # 미사일개체 너비 높이
 enemy_width, enemy_height = 23, 15                                  # 적 개체 너비, 높이
 mySize = 40                                                         # 내 개체 크기
 maxGameSpeed = 5                                                    # 게임 최대 스피드
 gameInitCheck = False                                               # 초기화변수들
-gameResult = []                                                     #게임 결과 저장용
+gameResult = []                                                     # 게임 결과 저장용
+missileSpeed = 5                                                    # 총알 속도
 
 # 게임 스크린 사이즈와 게임 제목 설정
 game_screen = pygame.display.set_mode((widthSize, heightSize))
@@ -165,7 +167,7 @@ while not finish:
         if missileCheck == True:
             if pressed[pygame.K_SPACE]:
                 bullet_sound.play()
-                missile = Missile(game_screen, airplane_pos_x-missile_width, airplane_pos_y, airplane_pos_x-missile_width, airplane_pos_y - missile_height)
+                missile = Missile(game_screen, airplane_pos_x-errorRange_x, airplane_pos_y, airplane_pos_x-errorRange_x, airplane_pos_y - errorRange_y)
                 missileList.append(missile)
                 missileCheck = False
                 missileShotTime = gameTotalTime - 1
