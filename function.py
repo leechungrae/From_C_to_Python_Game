@@ -36,5 +36,3 @@ def show_result(game_screen,widthSize,heightSize,gameResult):
     else:
         for i in range(len(gameResult)):
             show_text(game_screen, "Score:  " + str(gameResult[i]), widthSize / 3 + 30, heightSize / 3 + (50 * i))
-
-

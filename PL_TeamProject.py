@@ -63,7 +63,6 @@ class Missile(MoveEntity):
 
 # ----------------------------------## 게임 기본 설정 관련 ##---------------------------------------
 pygame.init()
-
 widthSize, heightSize = 500, 400
 errorRange_x, errorRange_y = 4, 1                                   # 충돌시 미사일 오차범위
 missile_width, missile_height = 23, 35                              # 미사일개체 너비 높이
@@ -77,15 +76,12 @@ missileSpeed = 5                                                    # 총알 속
 # 게임 스크린 사이즈와 게임 제목 설정
 game_screen = pygame.display.set_mode((widthSize, heightSize))
 pygame.display.set_caption("PL_Project")
-
 # 오디오 출력용
 pygame.mixer.music.load('sound/bgm.wav')
 pygame.mixer.music.play(-1)
-
 # 미사일 효과음
 bullet_sound = pygame.mixer.Sound("audio/bullet.wav")
 bullet_sound.set_volume(0.6)
-
 # 명중 시 폭발음
 collision_sound = pygame.mixer.Sound("audio/explosion.wav")
 collision_sound.set_volume(0.8)
@@ -94,7 +90,6 @@ collision_sound.set_volume(0.8)
 finish = False
 while not finish:
     if gameInitCheck == False: #게임 초기화 체크용
-
         gameScoreCheck = False                                      # 종료시 게임점수 체크
         makeEnemyCheck = False                                      # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
         enemyStage = 1                                              # 새로 등장하는 적 개체판단용도
@@ -107,10 +102,10 @@ while not finish:
         airplane_pos_x = widthSize / 2                              # 내 캐릭터 초기 위치값
         airplane_pos_y = heightSize / 2                             # 내 캐릭터 초기 위치값
         missileCheck = True                                         # 미사일 계속 발생안되게 만드는 것
-        gameInitCheck = True                                        # 게임 초기화 설정용도
         minEnemyCount = 5                                           # 처음 적 개체 미니멈 수
         gameScore = 0                                               # 게임 스코어
 
+        gameInitCheck = True                                        # 게임 초기화 설정용도
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -162,7 +157,6 @@ while not finish:
             minEnemyCount +=1
             enemyStage +=1
 
-
         # - 미사일  생성 & 처리 -
         if missileCheck == True:
             if pressed[pygame.K_SPACE]:
@@ -175,7 +169,7 @@ while not finish:
             if gameTotalTime - missileShotTime > 1:
                 missileCheck = True
 
-        # ------미사일 리스트 출력, 충돌 시 이벤트 처리
+        # - 미사일 리스트 출력, 충돌 시 이벤트 처리 -
         for m in missileList:
             m.draw()
             if m.check == True:
