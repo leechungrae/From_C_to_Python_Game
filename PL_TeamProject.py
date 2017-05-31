@@ -93,7 +93,7 @@ finish = False
 while not finish:
     if gameInitCheck == False: #게임 초기화 체크용
 
-        gameOverTimeCheck = False                                   # 종료시 게임시간 체크
+        gameScoreCheck = False                                      # 종료시 게임점수 체크
         makeEnemyCheck = False                                      # 처음에 2페이지 넘어가면 한번만 생성해주기위해서 판단하는 변수
         enemyStage = 1                                              # 새로 등장하는 적 개체판단용도
         gameStartTimeCheck = False                                  # 게임 시작 저장용
@@ -107,6 +107,8 @@ while not finish:
         missileCheck = True                                         # 미사일 계속 발생안되게 만드는 것
         gameInitCheck = True                                        # 게임 초기화 설정용도
         minEnemyCount = 5                                           # 처음 적 개체 미니멈 수
+        gameScore = 0                                               # 게임 스코어
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -184,15 +186,16 @@ while not finish:
                     collision_sound.play()
                     missileList.remove(m)
                     enemyList.remove(e)
+                    gameScore += 1
 
     elif page == 3:  # 엔딩 화면
         function.show_img(game_screen, "picture/bg3.png", 0, 0)     # 배경 설정
 
-        #게임 시간 체크
-        if gameOverTimeCheck == False:
-            gameOverTime = gameTime
-            gameOverTimeCheck = True
-            gameResult.append(gameOverTime)
+        #게임 스코어
+        if gameScoreCheck == False:
+            gameOverScore = gameScore
+            gameResult.append(gameOverScore)
+            gameScoreCheck = True
 
         function.show_result(game_screen, widthSize, heightSize, gameResult)
         if pressed[pygame.K_s]:            gameInitCheck = False
