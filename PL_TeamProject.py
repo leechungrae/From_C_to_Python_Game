@@ -80,10 +80,10 @@ pygame.display.set_caption("PL_Project")
 pygame.mixer.music.load('sound/bgm.wav')
 pygame.mixer.music.play(-1)
 # 미사일 효과음
-bullet_sound = pygame.mixer.Sound("audio/bullet.wav")
+bullet_sound = pygame.mixer.Sound("sound/bullet.wav")
 bullet_sound.set_volume(0.6)
 # 명중 시 폭발음
-collision_sound = pygame.mixer.Sound("audio/explosion.wav")
+collision_sound = pygame.mixer.Sound("sound/explosion.wav")
 collision_sound.set_volume(0.8)
 
 #-----------------------------------## 게임 로직 시작 ##---------------------------------------
