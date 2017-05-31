@@ -29,7 +29,12 @@ def enemyRandomPosition(w, h, s):
 
 
 def show_result(game_screen,widthSize,heightSize,gameResult):
-    for i in range(len(gameResult)):
-        show_text(game_screen, "Score:  " + str(gameResult[i]), widthSize / 3 + 30, heightSize / 3 + (50 * i))
+    gameResult.sort(reverse=True)
+    if len(gameResult) > 4:
+        for i in range(4):
+            show_text(game_screen, "Score:  " + str(gameResult[i]), widthSize / 3 + 30, heightSize / 3 + (50 * i))
+    else:
+        for i in range(len(gameResult)):
+            show_text(game_screen, "Score:  " + str(gameResult[i]), widthSize / 3 + 30, heightSize / 3 + (50 * i))
 
 

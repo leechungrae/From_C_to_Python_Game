@@ -66,8 +66,8 @@ pygame.init()
 
 widthSize, heightSize = 500, 400
 missile_width, missile_height = 4, 1                                # 미사일 너비, 높이
-enemy_width, enemy_height = 23, 5                                   # 적 개체 너비, 높이
-mySize = 30                                                         # 내 개체 크기
+enemy_width, enemy_height = 23, 15                                  # 적 개체 너비, 높이
+mySize = 40                                                         # 내 개체 크기
 maxGameSpeed = 5                                                    # 게임 최대 스피드
 gameInitCheck = False                                               # 초기화변수들
 gameResult = []                                                     #게임 결과 저장용
@@ -194,8 +194,17 @@ while not finish:
         #게임 스코어
         if gameScoreCheck == False:
             gameOverScore = gameScore
+            newRecordjudge = True                                   # 신기록 확인용도
+            for i in gameResult:
+                if gameOverScore <= i:
+                    newRecordjudge = False
+
             gameResult.append(gameOverScore)
             gameScoreCheck = True
+
+        if newRecordjudge == True:
+            function.show_text(game_screen, "New Record!!   " + str(gameOverScore), widthSize/2-80, heightSize/4)  # 텍스트 출력용
+
 
         function.show_result(game_screen, widthSize, heightSize, gameResult)
         if pressed[pygame.K_s]:            gameInitCheck = False
